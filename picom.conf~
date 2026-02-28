@@ -1,0 +1,75 @@
+#################################
+# Animation (lighter physics)
+#################################
+animations = true;
+animation-stiffness = 150;
+animation-dampening = 20;
+animation-clamping = false;
+animation-mass = 0.8;
+
+animation-for-open-window = "zoom";
+animation-for-unmap-window = "zoom";
+
+animation-exclude = [
+    "class_g = 'Polybar'",
+    "window_type = 'dock'"
+];
+
+#################################
+# Corners (cheap, keep)
+#################################
+corner-radius = 8;
+rounded-corners-exclude = [ "window_type = 'dock'" ];
+
+#################################
+# Shadows (reduce cost)
+#################################
+shadow = false;
+shadow-radius = 12;
+shadow-opacity = 0.35;
+shadow-offset-x = -10;
+shadow-offset-y = -10;
+shadow-color = "#000000";
+
+#################################
+# Backend optimization (important)
+#################################
+backend = "glx";
+glx-no-stencil = true;
+glx-no-rebind-pixmap = true;
+use-damage = true;
+
+# This helps reduce GPU/CPU sync overhead
+xrender-sync-fence = false;
+
+vsync = true;
+
+# Allow unredirect for fullscreen apps (huge performance win)
+unredir-if-possible = true;
+
+#################################
+# Blur (BIGGEST SAVINGS HERE)
+#################################
+blur: {
+  method = "dual_kawase";
+  strength = 6;   # was 8, this halves blur cost
+  background = false;
+  background-frame = false;
+  background-fixed = false;
+}
+
+#################################
+# Opacity rules (cheap)
+#################################
+opacity-rule = [
+  "90:class_g = 'Alacritty' && !focused",
+  "100:class_g = 'Alacritty' && focused"
+];
+
+#################################
+# Fading (slow and smooth)
+#################################
+fading = true;
+fade-in-step = 0.3;
+fade-out-step = 0.3;
+fade-delta = 12;
