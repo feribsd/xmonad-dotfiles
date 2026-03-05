@@ -18,7 +18,7 @@ import XMonad.Hooks.ManageHelpers
 import System.Exit (exitSuccess)
 
 myModMask = mod1Mask
-myTerminal = "alacritty"
+myTerminal = "st"
 myBorderWidth = 3
 myNormalBorderColor  = "#3c3836"  
 myFocusedBorderColor = "#4A3609"  
