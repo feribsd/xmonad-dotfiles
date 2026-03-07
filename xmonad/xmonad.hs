@@ -9,7 +9,7 @@ import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Layout.Spacing
 import XMonad.Layout.Grid
-import XMonad.Layout.NoBorders
+import XMonad.Layout.NoBorders  -- Useful for fullscreen
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.ThreeColumns
@@ -38,8 +38,10 @@ gridLayout = Grid
 monocle = Full
 threeCol = ThreeCol 1 (3/100) (1/2)
 
+-- Added smartBorders so that fullscreen/single windows don't have ugly gaps/borders
 myLayoutHook =
     avoidStruts $
+    smartBorders $ 
     mySpacing $
         tiled
         ||| vertical
@@ -59,17 +61,16 @@ myManageHook =
         [ className =? "Rofi" --> doFloat
         , className =? "Pavucontrol" --> doFloat
         , isDialog --> doFloat
-        , isFullscreen --> doFullFloat
+        , isFullscreen --> doFullFloat -- This handles apps requesting fullscreen
         ]
     <+> namedScratchpadManageHook myScratchpads
 
 myStartupHook = do
     spawnOnce "picom --config ~/.config/picom/picom.conf"
-    -- Clean up and restart the audio stack
     spawn "pkill pipewire; pkill pipewire-pulse; pkill wireplumber"
     spawn "pipewire & sleep 1 && pipewire-pulse & sleep 1 && wireplumber"
     spawnOnce "polybar"
-    spawnOnce "feh --bg-fill ~/.config/wallpaper.jpg"
+    spawnOnce "feh --bg-fill ~/Downloads/jankozizak.jpg"
 
 myKeys =
   [ ("M-<Return>", spawn myTerminal)
@@ -84,6 +85,8 @@ myKeys =
   , ("M-e", namedScratchpadAction myScratchpads "scratchpad")
   , ("M-S-r", spawn "xmonad --recompile; xmonad --restart")
   , ("M-S-q", io exitSuccess)
+  -- Fullscreen Toggle (Standard XMonad way)
+  , ("M-S-f", sendMessage $ ToggleStruts) 
   ]
   ++
   [ ("M-" ++ show i, windows $ W.greedyView (show i))
@@ -91,6 +94,11 @@ myKeys =
   ]
   ++
   [ ("M-S-" ++ show i, windows $ W.shift (show i))
+    | i <- [1..9]
+  ]
+  ++
+  -- NEW: Bind Ctrl + Workspace to move window AND follow it
+  [ ("M-C-" ++ show i, windows $ W.shift (show i) >> W.greedyView (show i))
     | i <- [1..9]
   ]
 
@@ -102,6 +110,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) =
 
 main =
   xmonad $
+  ewmhFullscreen $ -- Added for better fullscreen support across EWMH apps
   ewmh $
   docks (def
     { modMask = myModMask
