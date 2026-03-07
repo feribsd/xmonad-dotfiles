@@ -18,7 +18,7 @@ import XMonad.Hooks.ManageHelpers
 import System.Exit (exitSuccess)
 
 myModMask = mod1Mask
-myTerminal = "st"
+myTerminal = "alacritty"
 myBorderWidth = 3
 myNormalBorderColor  = "#3c3836"  
 myFocusedBorderColor = "#4A3609"  
@@ -69,7 +69,7 @@ myStartupHook = do
     spawn "pkill pipewire; pkill pipewire-pulse; pkill wireplumber"
     spawn "pipewire & sleep 1 && pipewire-pulse & sleep 1 && wireplumber"
     spawnOnce "polybar"
-    spawnOnce "feh --bg-fill ~/Downloads/jankozizak.jpg"
+    spawnOnce "feh --bg-fill ~/.config/wallpaper.jpg"
 
 myKeys =
   [ ("M-<Return>", spawn myTerminal)
